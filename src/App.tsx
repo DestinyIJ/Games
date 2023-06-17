@@ -1,12 +1,10 @@
-import { ChessBoard } from "./components"
+import ChessGame from "./games/chess"
 
 function App() {
 
   return (
     <>
-      <div className="flex items-center justify-center h-screen bg-[#202020]">
-        <ChessBoard />
-      </div>
+      <ChessGame />
     </>
   )
 }

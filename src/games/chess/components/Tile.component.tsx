@@ -1,4 +1,4 @@
-import { ReactNode, useContext } from 'react';
+import { ReactNode, useContext, useRef } from 'react';
 import { ChessGameContext } from '../context/ChessGame.context';
 
 interface TileProp {
@@ -7,8 +7,10 @@ interface TileProp {
 }
 
 const Tile = ({ square }: TileProp) => {
-  const { board, handleMove } = useContext(ChessGameContext)
+  const { handleMove } = useContext(ChessGameContext)
 
+  const tileRef = useRef<HTMLDivElement | null>(null)
+ 
   const isEven = (number:number) => number % 2 === 0
   const isOdd = (number:number) => number % 2 !== 0
 
@@ -24,42 +26,23 @@ const Tile = ({ square }: TileProp) => {
       return false
     }
   }
-  
-
-  const getSquarePiece = (square:string) => {
-    if(board) {
-      const row = parseInt(square[1]) -1
-      const col = square[0]
-
-      return board[col][row]
-    }
-  }
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>, square: string) => {
-    console.log("handling drop", handleMove)
     event.preventDefault()
     const pieceId = event.dataTransfer.getData('text/plain');
-
     if (handleMove) {
       handleMove({ pieceId, square });
     }
-    
   };
 
-  const handleDragOver = (event: React.DragEvent<HTMLDivElement>, square: string) => {
-    event.preventDefault()
-    console.log(square)
-  };
+  
 
   return (
-    <div id={square} key={square} 
-      onDragOver={(event) => handleDragOver(event, square)}
+    <div id={square} key={square} ref={tileRef}
+      onDragOver={(event) => event.preventDefault()}
       onDrop={(event) => handleDrop(event, square)}
-      className={`${colorSquare(square) ? "bg-white" : ""} flex items-center justify-center`}
+      className={`${colorSquare(square) ? "bg-white" : ""} flex items-center justify-center z-[1000]`}
     >
-       {
-        getSquarePiece(square)
-       }
     </div>
   )
 }
